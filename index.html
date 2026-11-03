@@ -1,24 +1,42 @@
 
-<html>
-<head>
-    <title>Event Registration</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <h2>Event Registration Form</h2>
+set ns [new Simulator]
 
-    <form id="form">
-        <input id="name" placeholder="Enter Name" required>
-        <input id="email" type="email" placeholder="Enter Email" required>
-        <select id="event" required>
-            <option value="">Select Event</option>
-            <option>Workshop</option>
-            <option>Technical</option>
-        </select>
-        <button>Register</button>
-    </form>
+set tr [open out.tr w]
+$ns trace-all $tr
 
-    <p id="msg"></p>
-    <script src="script.js"></script>
-</body>
-</html>
+set nf [open out.nam w]
+$ns namtrace-all $nf
+
+set n0 [$ns node]
+set n1 [$ns node]
+set n2 [$ns node]
+
+$ns duplex-link $n0 $n2 1Mb 10ms DropTail
+$ns duplex-link $n1 $n2 1Mb 10ms DropTail
+
+set udp [new Agent/UDP]
+$ns attach-agent $n0 $udp
+
+set null [new Agent/Null]
+$ns attach-agent $n2 $null
+$ns connect $udp $null
+
+set cbr [new Application/Traffic/CBR]
+$cbr set packetSize_ 1000
+$cbr set interval_ 0.001
+$cbr attach-agent $udp
+
+proc finish {} {
+    global ns tr nf
+    $ns flush-trace
+    close $tr
+    close $nf
+    exec nam out.nam &
+    exit 0
+}
+
+$ns at 0.5 "$cbr start"
+$ns at 5.0 "$cbr stop"
+$ns at 5.5 "finish"
+
+$ns run
