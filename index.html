@@ -1,42 +1,32 @@
+import 'package:flutter/material.dart';
 
-set ns [new Simulator]
-
-set tr [open out.tr w]
-$ns trace-all $tr
-
-set nf [open out.nam w]
-$ns namtrace-all $nf
-
-set n0 [$ns node]
-set n1 [$ns node]
-set n2 [$ns node]
-
-$ns duplex-link $n0 $n2 1Mb 10ms DropTail
-$ns duplex-link $n1 $n2 1Mb 10ms DropTail
-
-set udp [new Agent/UDP]
-$ns attach-agent $n0 $udp
-
-set null [new Agent/Null]
-$ns attach-agent $n2 $null
-$ns connect $udp $null
-
-set cbr [new Application/Traffic/CBR]
-$cbr set packetSize_ 1000
-$cbr set interval_ 0.001
-$cbr attach-agent $udp
-
-proc finish {} {
-    global ns tr nf
-    $ns flush-trace
-    close $tr
-    close $nf
-    exec nam out.nam &
-    exit 0
+void main() {
+  runApp(const MyApp());
 }
 
-$ns at 0.5 "$cbr start"
-$ns at 5.0 "$cbr stop"
-$ns at 5.5 "finish"
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-$ns run
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text("Text Widget Example"),
+          backgroundColor: Colors.blue,
+        ),
+        body: const Center(
+          child: Text(
+            "Hello, Flutter!",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
