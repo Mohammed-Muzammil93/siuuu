@@ -1,24 +1,72 @@
+import 'package:flutter/material.dart';
 
-body {
-    font-family: Arial;
-    text-align: center;
-    background: lightblue;
+void main() {
+  runApp(const MyApp());
 }
 
-form {
-    background: white;
-    padding: 20px;
-    margin: 30px auto;
-    width: 250px;
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text("CustomWidgetExample"),
+          backgroundColor: Colors.blue,
+        ),
+        body: const Center(
+          child: StudentCard(
+            name: "Meghana",
+            course: "B.Tech CSE",
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-input, select, button {
-    padding: 10px;
-    margin: 8px;
-    width: 90%;
-}
+// Custom Widget
+class StudentCard extends StatelessWidget {
+  final String name;
+  final String course;
 
-button {
-    background: blue;
-    color: white;
+  const StudentCard({
+    super.key,
+    required this.name,
+    required this.course,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 280,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade100,
+        border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(
+            Icons.person,
+            size: 60,
+            color: Colors.blue,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            "Name : $name",
+            style: const TextStyle(fontSize: 20),
+          ),
+          Text(
+            "Course : $course",
+            style: const TextStyle(fontSize: 20),
+          ),
+        ],
+      ),
+    );
+  }
 }
